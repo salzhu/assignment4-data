@@ -15,8 +15,9 @@ output_directory_path = "/data/c-salzhu/filteredCC/"
 CC_wets_path = '/data/CC/'
 # CC_wets_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/CC/CC/'
 
-# paloma_model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier.bin'
-# paloma_classifier = fasttext.load_model(paloma_model_path)
+paloma_model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier.bin'
+paloma_model_path = '/home/c-salzhu/paloma_classifier.bin'
+paloma_classifier = fasttext.load_model(paloma_model_path)
 
 def cleanup(text):
     text = re.sub(r'\s+', ' ', text)
@@ -87,7 +88,8 @@ if __name__ == '__main__':
             wet_filepaths.append(file_path)
     print(len(wet_filepaths))
     for filepath in wet_filepaths: 
-        process_single_wet_file(filepath, '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/CC/filtered')
+        # process_single_wet_file(filepath, '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/CC/filtered')
+        process_single_wet_file(filepath, '/data/c-salzhu/CC_filtered/')
         print(f'processed {filepath}')
 
 """
