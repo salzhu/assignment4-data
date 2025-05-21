@@ -11,12 +11,13 @@ from extract_text import extract_text
 from quality_classifier import parse_content
 
 model_path = '/home/c-salzhu/paloma_classifier.bin'
-model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier.bin'
+# model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier.bin'
 paloma_path = '/data/paloma/tokenized_paloma_c4_100_domains_validation.bin'
-paloma_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/tokenized_paloma_c4_100_domains_validation.bin'
+# paloma_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/tokenized_paloma_c4_100_domains_validation.bin'
 cc_path = '/home/c-salzhu/cc_scrape.txt'
-cc_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/cc_scrape_small.txt'
+# cc_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/cc_scrape_small.txt'
 train_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier_train.train'
+train_path = '/data/c-salzhu/paloma_classifier_train.train'
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 
 def cleanup(text):
