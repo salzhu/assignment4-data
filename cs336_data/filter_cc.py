@@ -3,6 +3,8 @@ import pathlib
 import fasttext
 import gzip 
 import re 
+from fastwarc.stream_io import *
+from fastwarc.warc import ArchiveIterator, WarcRecordType
 
 import submitit
 from tqdm import tqdm
@@ -64,13 +66,17 @@ def passes_filters(text):
 
 def process_single_wet_file(input_path: str, output_dir_path: str):
     # TODO: read input path, process the input, and write the output to output_path
-    texts = parse_content_gz(input_path)
+    # texts = parse_content_gz(input_path)
+    
     wet_filename = str(pathlib.Path(input_path).name)
     wet_filename = wet_filename[:wet_filename.find('.')]
     output_file_path = os.path.join(output_dir_path, f'{wet_filename}.txt')
     with open(output_file_path, 'a', encoding='utf-8') as file:
         count = 0 
-        for text in tqdm(texts): 
+        stream = GZipStream(open(input_path, 'rb'))
+        for record in ArchiveIterator(stream, record_types=WarcRecordType.response):
+            text = print(record.record_id)
+        # for text in tqdm(texts): 
             temp = cleanup(text)
             if passes_filters(temp):
                 file.write(f"{text}<|endoftext|>")
