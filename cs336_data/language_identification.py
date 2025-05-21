@@ -2,7 +2,7 @@ import fasttext
 from extract_text import extract_text
 
 lid_model_path = '/Users/sallyzhu/Downloads/lid.176.bin'
-lid_model_path = '/data/classifiers/lid.176.bin '
+lid_model_path = '/data/classifiers/lid.176.bin'
 n_texts = 20
 
 """
