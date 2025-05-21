@@ -3,6 +3,8 @@ from extract_text import extract_text
 
 nsfw_model_path = '/Users/sallyzhu/Downloads/jigsaw_fasttext_bigrams_nsfw_final.bin'
 toxic_model_path = '/Users/sallyzhu/Downloads/jigsaw_fasttext_bigrams_hatespeech_final.bin'
+nsfw_model_path = '/data/classifiers/dolma_fasttext_nsfw_jigsaw_model.bin'
+toxic_model_path = '/data/classifiers/dolma_fasttext_hatespeech_jigsaw_model.bin'
 n_texts = 20
 n_total_texts = 100
 
