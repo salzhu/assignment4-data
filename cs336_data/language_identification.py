@@ -13,7 +13,7 @@ n_texts = 20
 """
 def identify_language(unicode_string):
     model = fasttext.load_model(lid_model_path)
-    unicode_string = unicode_string.replace('\n', ' ')
+    # unicode_string = unicode_string.replace('\n', ' ')
     languages, scores = model.predict(unicode_string)
     language = languages[0]
     if language == '__label__zh':
