@@ -76,7 +76,7 @@ def process_single_wet_file(input_path: str, output_dir_path: str):
         stream = GZipStream(open(input_path, 'rb'))
         for record in ArchiveIterator(stream, record_types=WarcRecordType.conversion):
             text = record.reader.read().decode("utf-8")
-            print(text)
+            # print(text)
         # for text in tqdm(texts): 
             temp = cleanup(text)
             if passes_filters(temp):
