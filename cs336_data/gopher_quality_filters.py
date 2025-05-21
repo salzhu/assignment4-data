@@ -1,7 +1,7 @@
 import nltk 
 from extract_text import extract_text
 
-nltk.download()
+# nltk.download()
 n_texts = 20
 
 """

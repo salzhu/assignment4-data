@@ -41,26 +41,26 @@ def passes_filters(text):
         # print(f'language {language} {score}', end=' ')
         return False
     
-    # paloma classifier 
-    quality, score = paloma_classifier.predict(text)
-    if quality[0] != '__label__paloma': 
-        # print(f'paloma {quality}', end=' ', flush=True)
-        # print(text[:100])
-        return False 
+    # # paloma classifier 
+    # quality, score = paloma_classifier.predict(text)
+    # if quality[0] != '__label__paloma': 
+    #     # print(f'paloma {quality}', end=' ', flush=True)
+    #     # print(text[:100])
+    #     return False 
 
-    # gopher quality classifier 
-    gopher_quality = gopher_quality_filter(text)
-    if gopher_quality == False: 
-        # print('gopher', end=' ', flush=True)
-        return False 
+    # # gopher quality classifier 
+    # gopher_quality = gopher_quality_filter(text)
+    # if gopher_quality == False: 
+    #     # print('gopher', end=' ', flush=True)
+    #     return False 
 
-    # harmful content 
-    if detect_nsfw_content(text)[0] == 'nsfw': 
-        # print('nsfw', end=' ', flush=True)
-        return False
-    if detect_hate_speech(text)[0] == 'toxic': 
-        # print('toxic', end=' ', flush=True)
-        return False
+    # # harmful content 
+    # if detect_nsfw_content(text)[0] == 'nsfw': 
+    #     # print('nsfw', end=' ', flush=True)
+    #     return False
+    # if detect_hate_speech(text)[0] == 'toxic': 
+    #     # print('toxic', end=' ', flush=True)
+    #     return False
 
     return True 
 
