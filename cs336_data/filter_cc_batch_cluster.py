@@ -45,6 +45,7 @@ def process_batch(raw_texts, file):
         if languages[i][0] != '__label__en' or scores[i][0] < 0.5: 
             continue 
         english_raw_texts.append(raw_texts[i])
+    print(f'after english {len(english_raw_texts)}', end=' ', flush=True)
 
     english_texts = [cleanup(text) for text in english_raw_texts]
 
@@ -55,21 +56,27 @@ def process_batch(raw_texts, file):
         if qualities[i][0] != '__label__paloma': 
             continue 
         paloma_raw_texts.append(english_raw_texts[i])
+    print(f'after paloma {len(paloma_raw_texts)}', end=' ', flush=True)
 
     paloma_texts = [cleanup(text) for text in paloma_raw_texts]
 
     nsfw_label, scores = nsfw_model.predict(paloma_texts)
     toxic_label, scores = toxic_model.predict(paloma_texts)
+    nsfw_skip = 0 
+    toxic_skip = 0
     for i in range(len(paloma_texts)):
         text = paloma_texts[i]
         if nsfw_label[i][0] == '__label__nsfw': 
+            nsfw_skip += 1
             continue 
         if toxic_label[i][0] == '__label__toxic': 
+            toxic_skip += 1
             continue 
         if gopher_quality_filter(text) == False: 
             continue 
         file.write(f"{paloma_raw_texts[i]}<|endoftext|>")
         count += 1
+    print(f'nsfw skip {nsfw_skip} toxic skip {toxic_skip} after gopher {count}', flush=True)
     return count
 
 def process_single_wet_file(input_path: str, output_dir_path: str):
