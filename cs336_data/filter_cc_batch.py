@@ -14,56 +14,59 @@ from language_identification import identify_language
 from gopher_quality_filters import gopher_quality_filter
 
 output_directory_path = "/data/c-salzhu/filteredCC/"
-# CC_wets_path = '/data/CC/'
 CC_wets_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/CC/CC/'
 
-paloma_model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier.bin'
-# paloma_model_path = '/home/c-salzhu/paloma_classifier.bin'
+paloma_model_path = '/Users/sallyzhu/Desktop/cs336/assignment4-data/cs336_data/data/paloma_classifier_strict.bin'
 paloma_classifier = fasttext.load_model(paloma_model_path)
 
-def parse_content_gz(file_path):
-    with gzip.open(file_path, 'rt', encoding='utf-8') as file: #rb?
-        content = file.read()
+nsfw_model_path = '/Users/sallyzhu/Downloads/jigsaw_fasttext_bigrams_nsfw_final.bin'
+nsfw_model = fasttext.load_model(nsfw_model_path)
+toxic_model_path = '/Users/sallyzhu/Downloads/jigsaw_fasttext_bigrams_hatespeech_final.bin'
+toxic_model = fasttext.load_model(toxic_model_path)
 
-    pattern = r'Content-Length: .*?\n\n(.*?)WARC/1\.0' # Content-Length HTTP/1\.1 
-    matches = re.findall(pattern, content, re.DOTALL)
+lid_model_path = '/Users/sallyzhu/Downloads/lid.176.bin'
+lid_model = fasttext.load_model(lid_model_path)
 
-    return matches
+BATCH_SIZE = 512
 
 def cleanup(text):
     text = re.sub(r'\s+', ' ', text)
     return text.replace('\n', ' ').strip()
 
-def passes_filters(text):
+def process_batch(texts, file):
+    texts = [cleanup(text) for text in texts]
     # check language --> 0.5 english score 
-    language, score = identify_language(text)
-    if language != 'en' or score < 0.5: 
-        # print(f'language {language} {score}', end=' ')
-        return False
+    languages, scores = lid_model.predict(texts)
     
-    # paloma classifier 
-    quality, score = paloma_classifier.predict(text)
-    print(quality, score, flush=True)
-    if quality[0] != '__label__paloma': 
-        # print(f'paloma {quality}', end=' ', flush=True)
-        # print(text[:100])
-        return False 
+    english_texts = []
+    count = 0 
 
-    # gopher quality classifier 
-    gopher_quality = gopher_quality_filter(text)
-    if gopher_quality == False: 
-        # print('gopher', end=' ', flush=True)
-        return False 
+    for i in range(len(texts)):
+        if languages[i][0] != '__label__en' or scores[i][0] < 0.5: 
+            continue 
+        english_texts.append(texts[i])
 
-    # harmful content 
-    if detect_nsfw_content(text)[0] == 'nsfw': 
-        # print('nsfw', end=' ', flush=True)
-        return False
-    if detect_hate_speech(text)[0] == 'toxic': 
-        # print('toxic', end=' ', flush=True)
-        return False
+    qualities, scores = paloma_classifier.predict(english_texts)
+    paloma_texts = []
+    for i in range(len(english_texts)):
+        text = english_texts[i]
+        if qualities[i][0] != '__label__paloma': 
+            continue 
+        paloma_texts.append(text)
 
-    return True 
+    nsfw_label, scores = nsfw_model.predict(paloma_texts)
+    toxic_label, scores = toxic_model.predict(paloma_texts)
+    for i in range(len(paloma_texts)):
+        text = paloma_texts[i]
+        if nsfw_label[i][0] == '__label__nsfw': 
+            continue 
+        if toxic_label[i][0] == '__label__toxic': 
+            continue 
+        if gopher_quality_filter(text) == False: 
+            continue 
+        file.write(f"{text}<|endoftext|>")
+        count += 1
+    return count
 
 def process_single_wet_file(input_path: str, output_dir_path: str):
     # TODO: read input path, process the input, and write the output to output_path
@@ -72,18 +75,27 @@ def process_single_wet_file(input_path: str, output_dir_path: str):
     wet_filename = str(pathlib.Path(input_path).name)
     wet_filename = wet_filename[:wet_filename.find('.')]
     output_file_path = os.path.join(output_dir_path, f'{wet_filename}.txt')
+
+    buffer_texts: list[str] = []
+    total_docs = 0
+    good_docs  = 0
+    stream = GZipStream(open(input_path, 'rb'))
     with open(output_file_path, 'a', encoding='utf-8') as file:
-        count = 0 
-        stream = GZipStream(open(input_path, 'rb'))
-        for record in tqdm(ArchiveIterator(stream, record_types=WarcRecordType.conversion)):
+        for record in ArchiveIterator(stream, record_types=WarcRecordType.conversion):          # WET is fine TODO removed func_filter=is_http
             text = record.reader.read().decode("utf-8")
-            # print(text)
-        # for text in tqdm(texts): 
-            temp = cleanup(text)
-            if passes_filters(temp):
-                file.write(f"{text}<|endoftext|>")
-                print(count, flush=True)
-                count += 1
+
+            buffer_texts.append(text)
+            total_docs += 1
+
+            # periodic progress
+            if total_docs % (BATCH_SIZE * 5) == 0:
+                print(f"Processed {total_docs:,} docs "
+                    f"| accepted {good_docs:,} ")
+
+            # process full batch
+            if len(buffer_texts) >= BATCH_SIZE:
+                good_docs += process_batch(buffer_texts, file)
+                buffer_texts.clear()
 
     return output_file_path
 
