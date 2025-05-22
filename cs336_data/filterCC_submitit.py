@@ -7,8 +7,8 @@ from cs336_data.filter_cc_batch_cluster import process_single_wet_file
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("output", type=str, default="/data/c-salzhu/filteredCC_strict_0522/")
-parser.add_argument("CC", type=str, default='/data/CC/')
+parser.add_argument('--output', type=str, default="/data/c-salzhu/filteredCC_strict_0522/")
+parser.add_argument('--CC', type=str, default='/data/CC/')
 args = parser.parse_args()
 
 CC_wets_path = args.CC
