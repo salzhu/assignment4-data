@@ -1,5 +1,5 @@
 import nltk 
-from extract_text import extract_text
+from cs336_data.extract_text import extract_text
 
 # nltk.download()
 n_texts = 20
