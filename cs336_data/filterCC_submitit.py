@@ -40,7 +40,7 @@ with executor.batch():
         future = executor.submit(
             process_single_wet_file,
             wet_filepath,
-            os.path.join(output_directory_path, wet_filename)
+            output_directory_path
         )
         # Store the futures
         futures.append(future)
