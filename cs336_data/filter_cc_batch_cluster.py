@@ -33,26 +33,30 @@ def cleanup(text):
     text = re.sub(r'\s+', ' ', text)
     return text.replace('\n', ' ').strip()
 
-def process_batch(texts, file):
-    texts = [cleanup(text) for text in texts]
+def process_batch(raw_texts, file):
+    texts = [cleanup(text) for text in raw_texts]
     # check language --> 0.5 english score 
     languages, scores = lid_model.predict(texts)
     
-    english_texts = []
+    english_raw_texts = []
     count = 0 
 
     for i in range(len(texts)):
         if languages[i][0] != '__label__en' or scores[i][0] < 0.5: 
             continue 
-        english_texts.append(texts[i])
+        english_raw_texts.append(raw_texts[i])
+
+    english_texts = [cleanup(text) for text in english_raw_texts]
 
     qualities, scores = paloma_classifier.predict(english_texts)
-    paloma_texts = []
+    paloma_raw_texts = []
     for i in range(len(english_texts)):
         text = english_texts[i]
         if qualities[i][0] != '__label__paloma': 
             continue 
-        paloma_texts.append(text)
+        paloma_raw_texts.append(english_raw_texts[i])
+
+    paloma_texts = [cleanup(text) for text in paloma_raw_texts]
 
     nsfw_label, scores = nsfw_model.predict(paloma_texts)
     toxic_label, scores = toxic_model.predict(paloma_texts)
@@ -64,7 +68,7 @@ def process_batch(texts, file):
             continue 
         if gopher_quality_filter(text) == False: 
             continue 
-        file.write(f"{text}<|endoftext|>")
+        file.write(f"{paloma_raw_texts[i]}<|endoftext|>")
         count += 1
     return count
 
