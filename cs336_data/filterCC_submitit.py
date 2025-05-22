@@ -3,7 +3,7 @@ import submitit
 import pathlib
 from tqdm import tqdm
 
-from filter_cc_batch_cluster import process_single_wet_file
+from cs336_data.filter_cc_batch_cluster import process_single_wet_file
 
 CC_wets_path = '/data/CC/'
 output_directory_path = "/data/c-salzhu/filteredCC_strict_0522_test/"
