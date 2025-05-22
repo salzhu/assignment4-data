@@ -5,8 +5,17 @@ from tqdm import tqdm
 
 from cs336_data.filter_cc_batch_cluster import process_single_wet_file
 
-CC_wets_path = '/data/CC/'
-output_directory_path = "/data/c-salzhu/filteredCC_strict_0522/"
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("output", type=str, default="/data/c-salzhu/filteredCC_strict_0522/")
+parser.add_argument("CC", type=str, default='/data/CC/')
+args = parser.parse_args()
+
+CC_wets_path = args.CC
+output_directory_path = args.output 
+
+if not os.path.exists(output_directory_path):
+    os.makedirs(output_directory_path)
 
 # Set up the submitit executor
 executor = submitit.AutoExecutor(folder="slurm_logs")
