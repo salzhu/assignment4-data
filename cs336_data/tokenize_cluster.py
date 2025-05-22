@@ -18,7 +18,7 @@ def tokenize_single_file(input_path: str, output_dir_path: str):
 
     CC_filename = str(pathlib.Path(input_path).name)
     CC_filename = CC_filename[:CC_filename.find('.')]
-    output_file_path = os.path.join(output_dir_path, f'{CC_filename}.txt')
+    output_file_path = os.path.join(output_dir_path, f'{CC_filename}.bin')
 
     with open(input_path) as f:
         lines = f.readlines()
