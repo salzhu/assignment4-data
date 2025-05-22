@@ -10,7 +10,7 @@ output_directory_path = "/data/c-salzhu/filteredCC_strict_0522/"
 
 # Set up the submitit executor
 executor = submitit.AutoExecutor(folder="slurm_logs")
-max_simultaneous_jobs = 8
+max_simultaneous_jobs = 16
 # wet_filepaths = ["a.warc.wet.gz", "b.warc.wet.gz", "c.warc.wet.gz"]
 wet_filepaths = []
 for root, _, files in os.walk(CC_wets_path):
