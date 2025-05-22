@@ -9,9 +9,9 @@ from fastwarc.warc import ArchiveIterator, WarcRecordType
 import submitit
 from tqdm import tqdm
 
-from harmful_content import detect_nsfw_content, detect_hate_speech
-from language_identification import identify_language
-from gopher_quality_filters import gopher_quality_filter
+# from harmful_content import detect_nsfw_content, detect_hate_speech
+# from language_identification import identify_language
+from cs336_data.gopher_quality_filters import gopher_quality_filter
 
 output_directory_path = "/data/c-salzhu/filteredCC_strict_0522_test/"
 CC_wets_path = '/data/CC/'
