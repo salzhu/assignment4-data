@@ -34,7 +34,7 @@ executor.update_parameters(
     slurm_array_parallelism=max_simultaneous_jobs,
     timeout_min=15,
     mem_gb=2,
-    cpus_per_task=2,
+    cpus_per_task=1,
     slurm_account="student",
     slurm_partition="a4-cpu",
     slurm_qos="a4-cpu-qos",
