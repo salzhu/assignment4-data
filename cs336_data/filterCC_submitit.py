@@ -6,7 +6,7 @@ from tqdm import tqdm
 from cs336_data.filter_cc_batch_cluster import process_single_wet_file
 
 CC_wets_path = '/data/CC/'
-output_directory_path = "/data/c-salzhu/filteredCC_strict_0522_test/"
+output_directory_path = "/data/c-salzhu/filteredCC_strict_0522/"
 
 # Set up the submitit executor
 executor = submitit.AutoExecutor(folder="slurm_logs")
@@ -18,7 +18,6 @@ for root, _, files in os.walk(CC_wets_path):
         file_path = os.path.join(root, file)
         if file[:2] != 'CC': continue
         wet_filepaths.append(file_path)
-wet_filepaths = wet_filepaths[:3]
 print(len(wet_filepaths))
 
 # Configure parameters of each job launched by submitit

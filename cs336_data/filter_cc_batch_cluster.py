@@ -42,7 +42,7 @@ def process_batch(raw_texts, file):
     count = 0 
 
     for i in range(len(texts)):
-        if languages[i][0] != '__label__en' or scores[i][0] < 0.5: 
+        if languages[i][0] != '__label__en' or scores[i][0] < 0.7: 
             continue 
         english_raw_texts.append(raw_texts[i])
     # print(f'after english {len(english_raw_texts)}', end=' ', flush=True)
