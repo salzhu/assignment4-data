@@ -13,7 +13,7 @@ from harmful_content import detect_nsfw_content, detect_hate_speech
 from language_identification import identify_language
 from gopher_quality_filters import gopher_quality_filter
 
-output_directory_path = "/data/c-salzhu/filteredCC/"
+output_directory_path = "/data/c-salzhu/filteredCC_strict_0522_test/"
 CC_wets_path = '/data/CC/'
 
 paloma_model_path = '/home/c-salzhu/paloma_classifier_strict.bin'
@@ -45,7 +45,7 @@ def process_batch(raw_texts, file):
         if languages[i][0] != '__label__en' or scores[i][0] < 0.5: 
             continue 
         english_raw_texts.append(raw_texts[i])
-    print(f'after english {len(english_raw_texts)}', end=' ', flush=True)
+    # print(f'after english {len(english_raw_texts)}', end=' ', flush=True)
 
     english_texts = [cleanup(text) for text in english_raw_texts]
 
@@ -56,7 +56,7 @@ def process_batch(raw_texts, file):
         if qualities[i][0] != '__label__paloma': 
             continue 
         paloma_raw_texts.append(english_raw_texts[i])
-    print(f'after paloma {len(paloma_raw_texts)}', end=' ', flush=True)
+    # print(f'after paloma {len(paloma_raw_texts)}', end=' ', flush=True)
 
     paloma_texts = [cleanup(text) for text in paloma_raw_texts]
 
@@ -67,16 +67,16 @@ def process_batch(raw_texts, file):
     for i in range(len(paloma_texts)):
         text = paloma_texts[i]
         if nsfw_label[i][0] == '__label__nsfw': 
-            nsfw_skip += 1
+            # nsfw_skip += 1
             continue 
         if toxic_label[i][0] == '__label__toxic': 
-            toxic_skip += 1
+            # toxic_skip += 1
             continue 
         if gopher_quality_filter(text) == False: 
             continue 
         file.write(f"{paloma_raw_texts[i]}<|endoftext|>")
         count += 1
-    print(f'nsfw skip {nsfw_skip} toxic skip {toxic_skip} after gopher {count}', flush=True)
+    # print(f'nsfw skip {nsfw_skip} toxic skip {toxic_skip} after gopher {count}', flush=True)
     return count
 
 def process_single_wet_file(input_path: str, output_dir_path: str):
@@ -110,20 +110,20 @@ def process_single_wet_file(input_path: str, output_dir_path: str):
 
     return output_file_path
 
-if __name__ == '__main__':
-    wet_filepaths = []
-    for root, _, files in os.walk(CC_wets_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            if file[:2] != 'CC': continue
-            wet_filepaths.append(file_path)
-    print(len(wet_filepaths))
-    for filepath in wet_filepaths: 
-        process_single_wet_file(filepath, output_directory_path)
-        # process_single_wet_file(filepath, '/data/c-salzhu/CC_filtered/')
-        print(f'processed {filepath}')
+# if __name__ == '__main__':
+#     wet_filepaths = []
+#     for root, _, files in os.walk(CC_wets_path):
+#         for file in files:
+#             file_path = os.path.join(root, file)
+#             if file[:2] != 'CC': continue
+#             wet_filepaths.append(file_path)
+#     print(len(wet_filepaths))
+#     for filepath in wet_filepaths: 
+#         process_single_wet_file(filepath, output_directory_path)
+#         # process_single_wet_file(filepath, '/data/c-salzhu/CC_filtered/')
+#         print(f'processed {filepath}')
 
-"""
+
 # Set up the submitit executor
 executor = submitit.AutoExecutor(folder="slurm_logs")
 max_simultaneous_jobs = 8
@@ -134,6 +134,8 @@ for root, _, files in os.walk(CC_wets_path):
         file_path = os.path.join(root, file)
         if file[:2] != 'CC': continue
         wet_filepaths.append(file_path)
+wet_filepaths = wet_filepaths[:3]
+print(len(wet_filepaths))
 
 # Configure parameters of each job launched by submitit
 executor.update_parameters(
@@ -166,4 +168,3 @@ for future in tqdm(
     ):
     output_file = future.result()
     print(f"Output file written: {output_file}")
-"""
