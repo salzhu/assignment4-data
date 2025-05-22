@@ -7,11 +7,11 @@ from cs336_data.tokenize_cluster import tokenize_single_file
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('--output', type=str, default="/data/c-salzhu/tokenizedCC_strict_0522/")
-parser.add_argument('--CC_filtered', type=str, default='/data/c-salzhu/filteredCC_strict_0522/')
+parser.add_argument('--output', type=str, default="/data/c-salzhu/tokenizedCC_strict_0522_4/")
+parser.add_argument('--CC_filtered', type=str, default='/data/c-salzhu/filteredCC_strict_0522_4/')
 args = parser.parse_args()
 
-CC_filtered_path = args.CC
+CC_filtered_path = args.CC_filtered
 output_directory_path = args.output 
 
 if not os.path.exists(output_directory_path):
