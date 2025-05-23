@@ -2,10 +2,10 @@
 
 paths:
   # Set to your data, tokenized with GPT-2 tokenizer!
-  train_bin: /data/c-salzhu/CC_tokenized_full_0522_5.npy
+  train_bin: /data/c-salzhu/CC_tokenized_full_0522_5.bin
   
   # The validation set which we have already tokenized with GPT-2 tokenizer, don't change this!
-  valid_bin: /data/paloma/tokenized_paloma_c4_100_domains_validation.npy
+  valid_bin: /data/paloma/tokenized_paloma_c4_100_domains_validation.bin
   
   model_output: /data/c-salzhu/output
 
