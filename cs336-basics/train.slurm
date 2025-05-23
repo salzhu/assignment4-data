@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=cs336-train
+#SBATCH --job-name=train
 #SBATCH --account=student
 #SBATCH --partition=a4-batch
 #SBATCH --qos=a4-batch-qos
 #SBATCH --gres=gpu:2              # 2 GPUs for torchrun
 #SBATCH --cpus-per-task=4         # 4 CPUs for this job (max allowed)
-#SBATCH --mem=32                # up to 100GB
+#SBATCH --mem=32G                # up to 100GB
 #SBATCH --time=12:00:00           # max run time
 #SBATCH --output=slurm_logs/%x_%j.out   # logs/cs336-train_<jobid>.out
 #SBATCH --error=slurm_logs/%x_%j.err
