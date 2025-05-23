@@ -20,7 +20,7 @@ for filename in tqdm(os.listdir(directory_path)):
         array = np.fromfile(file_path, dtype=np.uint16)  # Adjust dtype if necessary
         
         # Append the array to the list
-        all_arrays += array
+        all_arrays = np.concatenate(all_arrays, array)
 
 # Combine all arrays into a single large array
 # combined_array = np.concatenate(all_arrays)
