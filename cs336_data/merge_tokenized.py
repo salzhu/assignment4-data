@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from tqdm import tqdm 
 
 # Specify the directory path containing the .bin files
 directory_path = '/data/c-salzhu/tokenizedCC_strict_0522_5/'
@@ -11,12 +12,12 @@ output_file = '/data/c-salzhu/CC_tokenized_full_0522_5.bin'
 all_arrays = []
 
 # Iterate through all files in the directory
-for filename in os.listdir(directory_path):
+for filename in tqdm(os.listdir(directory_path)):
     if filename.endswith('.bin'):
         file_path = os.path.join(directory_path, filename)
         
         # Load the NumPy array from the .bin file
-        array = np.fromfile(file_path, dtype=np.float32)  # Adjust dtype if necessary
+        array = np.fromfile(file_path, dtype=np.uint16)  # Adjust dtype if necessary
         
         # Append the array to the list
         all_arrays.append(array)
