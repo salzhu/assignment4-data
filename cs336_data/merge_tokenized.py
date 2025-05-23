@@ -18,16 +18,19 @@ for filename in tqdm(os.listdir(directory_path)):
         
         # Load the NumPy array from the .bin file
         array = np.fromfile(file_path, dtype=np.uint16)  # Adjust dtype if necessary
+
+        array = list(array)
         
         # Append the array to the list
-        all_arrays = np.concatenate([all_arrays, array])
+        # all_arrays = np.concatenate([all_arrays, array])
+        all_arrays += array 
 
 # Combine all arrays into a single large array
 # combined_array = np.concatenate(all_arrays)
 
 # Save the combined array to a new .bin file
 output_path = os.path.join(directory_path, output_file)
-combined_array = all_arrays
+combined_array = np.array(all_arrays, dtype=np.uint16)
 combined_array.tofile(output_path)
 
 print(f"Combined array saved to: {output_path}")
