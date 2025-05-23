@@ -7,8 +7,8 @@
 #SBATCH --cpus-per-task=4         # 4 CPUs for this job (max allowed)
 #SBATCH --mem=32G                # up to 100GB
 #SBATCH --time=12:00:00           # max run time
-#SBATCH --output=slurm_logs/%x_%j.out   # logs/cs336-train_<jobid>.out
-#SBATCH --error=slurm_logs/%x_%j.err
+#SBATCH --output=x_%j.out   # logs/cs336-train_<jobid>.out
+#SBATCH --error=x_%j.err
 
 # Run your training command
 uv run torchrun --standalone --nproc_per_node=2 scripts/train.py --config-name=experiment/your_data
