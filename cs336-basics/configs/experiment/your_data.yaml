@@ -10,5 +10,5 @@ paths:
   model_output: /data/c-salzhu/output
 
 training:
-  wandb_entity: sallyzhu  # Set to your wandb entity, e.g. pliang
+  wandb_entity: sallyzhu-stanford-university  # Set to your wandb entity, e.g. pliang
   wandb_project: cs336-data
